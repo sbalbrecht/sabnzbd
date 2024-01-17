@@ -93,6 +93,19 @@ from sabnzbd.api import (
     Ttemplate,
 )
 
+# For json.dumps, orjson is magnitudes faster than ujson, but it is harder to
+# compile due to Rust dependency. Since the output is the same, we support all modules.
+import importlib.util
+
+if importlib.util.find_spec("orjson") is not None:
+    import orjson as json
+elif importlib.util.find_spec("ujson") is not None:
+    import ujson as json
+else:
+    import json
+
+from sabnzbd.skintext import SKIN_TEXT
+
 ##############################################################################
 # Security functions
 ##############################################################################
@@ -423,8 +436,10 @@ class MainPage:
 
     @secured_expose
     def index(self, **kwargs):
-        # Redirect to wizard if no servers are set
-        if kwargs.get("skip_wizard") or config.get_servers():
+        if not kwargs.get("skip_wizard") and not config.get_servers():
+            # Redirect to the setup wizard if no servers are set
+            raise cherrypy.HTTPRedirect("%s/wizard/" % cfg.url_base())
+        else:
             info = build_header()
 
             info["have_rss_defined"] = bool(config.get_rss())
@@ -447,9 +462,6 @@ class MainPage:
             info["bytespersec_list"] = ",".join([str(bps) for bps in bytespersec_list])
 
             return template_filtered_response(file=os.path.join(sabnzbd.WEB_DIR, "main.tmpl"), search_list=info)
-        else:
-            # Redirect to the setup wizard
-            raise cherrypy.HTTPRedirect("%s/wizard/" % cfg.url_base())
 
     @secured_expose(check_api_key=True)
     def shutdown(self, **kwargs):
@@ -491,6 +503,40 @@ class MainPage:
         else:
             return None
 
+    @secured_expose
+    def header(self, **kwargs):
+        """Get common page header information"""
+        cherrypy.response.headers["Content-Type"] = "application/json;charset=UTF-8"
+        cherrypy.response.headers["Cache-Control"] = "no-cache"
+
+        response = build_header(trans_functions = False)
+
+        return utob(json.dumps(response))
+
+    @secured_expose
+    def languages(self, **kwargs):
+        """Get list of supported languages"""
+        cherrypy.response.headers["Content-Type"] = "application/json;charset=UTF-8"
+
+        if sabnzbd.WIN32:
+            from sabnzbd.utils.apireg import get_install_lng
+
+            cfg.language.set(get_install_lng())
+            logging.debug('Installer language code "%s"', cfg.language())
+
+        response = list_languages()
+
+        return utob(json.dumps(response))
+
+    @secured_expose
+    def localization(self):
+        """Get dictionary of all translation text"""
+        cherrypy.response.headers["Content-Type"] = "application/json;charset=UTF-8"
+        cherrypy.response.headers["Cache-Control"] = "no-cache"
+
+        response = SKIN_TEXT
+
+        return utob(json.dumps(response))
 
 ##############################################################################
 class Wizard:
@@ -509,6 +555,7 @@ class Wizard:
         info = build_header(sabnzbd.WIZARD_DIR)
         info["languages"] = list_languages()
 
+        # return open('sabnzbd-ui/dist/index.html')
         return template_filtered_response(file=os.path.join(sabnzbd.WIZARD_DIR, "index.html"), search_list=info)
 
     @secured_expose(check_configlock=True)
