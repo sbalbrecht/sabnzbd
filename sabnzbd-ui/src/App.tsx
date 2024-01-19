@@ -1,4 +1,4 @@
-import Wizard from './components/wizard/Wizard.tsx'
+import Wizard from './routes/wizard/Wizard.tsx'
 import './App.css'
 
 function App() {

@@ -25,7 +25,6 @@ export default function Wizard() {
         ]);
     }, []);
 
-    const languageOptions = languages.map(LanguageOption);
     const noLanguages = (
         <>
             <hr />
@@ -51,7 +50,7 @@ export default function Wizard() {
                                 <br />
                                 <br />
                                 <div className="main-container">
-                                    {languageOptions.length > 0 ? languageOptions : noLanguages}
+                                    {languages.length ? languages.map(LanguageOption) : noLanguages}
                                     <div className="spacer"></div>
                                 </div>
                             </div>
