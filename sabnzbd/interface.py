@@ -534,7 +534,9 @@ class MainPage:
         cherrypy.response.headers["Content-Type"] = "application/json;charset=UTF-8"
         cherrypy.response.headers["Cache-Control"] = "no-cache"
 
-        response = SKIN_TEXT
+        response = {}
+        for key, value in SKIN_TEXT.items():
+            response[key] = T(value)
 
         return utob(json.dumps(response))
 
