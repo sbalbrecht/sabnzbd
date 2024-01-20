@@ -1,24 +1,31 @@
-import React from 'react'
+import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
-import Wizard from './routes/wizard/Wizard.tsx'
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from 'react-router-dom';
+import { RouterProvider, Router } from '@tanstack/react-router'
 import './assets/css/bootstrap.min.css';
 import './assets/js/jquery-3.5.1.min.js';
 import './assets/js/bootstrap.min.js';
 import './index.css'
 
-const router = createBrowserRouter([
-  {
-    path: '/wizard/index',
-    element: <Wizard />,
-  }
-]); 
+// Import generated route tree
+import { routeTree } from './routeTree.gen'
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>,
-)
+// Create a new router instance
+const router = new Router({ routeTree })
+
+// Register the router instance for type safety
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
+
+// Render app
+const rootElement = document.getElementById('root')!
+if (!rootElement.innerHTML) {
+  const root = ReactDOM.createRoot(rootElement)
+  root.render(
+    <StrictMode>
+      <RouterProvider router={router} />
+    </StrictMode>,
+  )
+}

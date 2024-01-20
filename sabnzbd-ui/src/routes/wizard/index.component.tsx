@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import logo from '/logo-full.svg';
-import './Wizard.css';
+import './wizard.css';
 
-export default function Wizard() {
+export const component = function Wizard() {
     const [T, setT] = useState(Object);
     const [header, setHeader] = useState(Object);
     const [languages, setLanguages] = useState([]);
