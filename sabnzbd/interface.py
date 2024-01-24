@@ -529,17 +529,17 @@ class MainPage:
         return utob(json.dumps(response))
 
     @secured_expose
-    def localization(self):
-        """Get dictionary of all translation text"""
-        cherrypy.response.headers["Content-Type"] = "application/json;charset=UTF-8"
+    def translation(self):
+        """Gets the po file for the current language"""
+        cherrypy.response.headers["Content-Type"] = "application/text;charset=UTF-8"
         cherrypy.response.headers["Cache-Control"] = "no-cache"
-
-        response = {}
-        for key, value in SKIN_TEXT.items():
-            response[key] = T(value)
-
-        return utob(json.dumps(response))
-
+        filename = os.path.join("po", "main", cfg.language() + ".po")
+    
+        with open(filename) as f:
+            data = f.read()
+        
+        return utob(data)
+            
 ##############################################################################
 class Wizard:
     def __init__(self, root):

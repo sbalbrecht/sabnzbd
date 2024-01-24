@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FileRoute } from '@tanstack/react-router';
 import { queryOptions } from '@tanstack/react-query';
+import { Trans } from "@lingui/macro";
 import logo from '/logo-full.svg';
 import './wizard.css';
 
@@ -8,9 +9,8 @@ export const Route = new FileRoute('/wizard/').createRoute({
     loader: async ({ context: { queryClient }}) => {
         const headerQuery = queryClient.ensureQueryData(headerQueryOptions());
         const languagesQuery = queryClient.ensureQueryData(languagesQueryOptions());
-        const translationQuery = queryClient.ensureQueryData(translationQueryOptions());
-        const [header, languages, T] = await Promise.all([headerQuery, languagesQuery, translationQuery]);
-        return {header, languages, T};
+        const [header, languages] = await Promise.all([headerQuery, languagesQuery]);
+        return {header, languages};
     },
     component: Wizard,
 })
@@ -25,17 +25,11 @@ const languagesQueryOptions = () => queryOptions({
     queryFn: fetchLanguages,
 })
 
-const translationQueryOptions = () => queryOptions({
-    queryKey: ["translation"],
-    queryFn: fetchTranslation
-})
-
 const fetchHeader: () => Promise<{ [key: string]: string }> = async () => await fetch('/header').then(res => res.json())
 const fetchLanguages: () => Promise<string[][]> = async () => await fetch('/languages').then(res => res.json())
-const fetchTranslation: () => Promise<{ [key: string]: string }> = async () => await fetch('/localization').then(res => res.json())
 
 function Wizard() {
-    const {header, languages, T} = Route.useLoaderData();
+    const {header, languages} = Route.useLoaderData();
     const [selectedLanguage, setSelectedLanguage] = useState(header['active_lang']);
 
     const noLanguages = (
@@ -54,12 +48,12 @@ function Wizard() {
                 <div className="container">
                     <div id="inner">
                         <div id="content" className="bigger">
-                            <div id="rightGreyText">{T['wizard-version']} {header['version']}</div>
-                            <h1>{T['wizard-quickstart']}</h1>
+                            <div id="rightGreyText"><Trans>SABnzbd Version</Trans> {header['version']}</div>
+                            <h1><Trans>SABnzbd Quick-Start Wizard</Trans></h1>
                             <hr />
                             <div className="bigger">
-                                <h3>{T['opt-language']}</h3>
-                                {T['explain-language']}
+                                <h3><Trans>Language</Trans></h3>
+                                <Trans>Select a web interface language.</Trans>
                                 <br />
                                 <br />
                                 <div className="main-container">
@@ -71,13 +65,13 @@ function Wizard() {
                         <hr />
                         <div className="row">
                             <div className="col-md-4 text-center">
-                                <a className="btn btn-danger" href={`../shutdown/?apikey=${header['apikey']}&amp;pid=${header['pid']}`}><span className="glyphicon glyphicon-remove"></span> {T['wizard-exit']}</a>
+                                <a className="btn btn-danger" href={`../shutdown/?apikey=${header['apikey']}&amp;pid=${header['pid']}`}><span className="glyphicon glyphicon-remove"></span> <Trans>Exit SABnzbd</Trans></a>
                             </div>
                             <div className="col-md-4 text-center">
-                                <a className="btn btn-default" href="../config/general/#config_backup_file"><span className="glyphicon glyphicon-open"></span> {T['restore-backup']}</a>
+                                <a className="btn btn-default" href="../config/general/#config_backup_file"><span className="glyphicon glyphicon-open"></span> <Trans>Restore backup</Trans></a>
                             </div>
                             <div className="col-md-4 text-center">
-                                <button className="btn btn-default">{T['wizard-start']} <span className="glyphicon glyphicon-chevron-right"></span></button>
+                                <button className="btn btn-default"><Trans>Start Wizard</Trans> <span className="glyphicon glyphicon-chevron-right"></span></button>
                             </div>
                         </div>
                     </div>
