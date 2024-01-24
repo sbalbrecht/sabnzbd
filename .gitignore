@@ -27,9 +27,6 @@ SABnzbd*.dmg
 SABnzbd*.pkg
 SABnzbd-*/
 
-# Make exception for UI
-!SABnzbd-ui/
-
 # WingIDE/PyCharm project files
 *.wp[ru]
 .idea

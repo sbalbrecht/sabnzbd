@@ -557,7 +557,7 @@ class Wizard:
         info = build_header(sabnzbd.WIZARD_DIR)
         info["languages"] = list_languages()
 
-        # return open('sabnzbd-ui/dist/index.html')
+        # return open('ui/dist/index.html')
         return template_filtered_response(file=os.path.join(sabnzbd.WIZARD_DIR, "index.html"), search_list=info)
 
     @secured_expose(check_configlock=True)

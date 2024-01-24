@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom/client'
 import { StrictMode } from 'react'
 import { RouterProvider, Router } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { routeTree } from './routeTree.gen'
+import { routeTree } from './routeTree.gen.js'
 import './assets/css/bootstrap.min.css';
 import './assets/js/jquery-3.5.1.min.js';
 import './assets/js/bootstrap.min.js';
