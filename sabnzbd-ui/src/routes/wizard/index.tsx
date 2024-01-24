@@ -1,29 +1,42 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { FileRoute } from '@tanstack/react-router';
+import { queryOptions } from '@tanstack/react-query';
 import logo from '/logo-full.svg';
 import './wizard.css';
 
-export const component = function Wizard() {
-    const [T, setT] = useState(Object);
-    const [header, setHeader] = useState(Object);
-    const [languages, setLanguages] = useState([]);
-    const [selectedLanguage, setSelectedLanguage] = useState('');
+export const Route = new FileRoute('/wizard/').createRoute({
+    loader: async ({ context: { queryClient }}) => {
+        const headerQuery = queryClient.ensureQueryData(headerQueryOptions());
+        const languagesQuery = queryClient.ensureQueryData(languagesQueryOptions());
+        const translationQuery = queryClient.ensureQueryData(translationQueryOptions());
+        const [header, languages, T] = await Promise.all([headerQuery, languagesQuery, translationQuery]);
+        return {header, languages, T};
+    },
+    component: Wizard,
+})
 
-    useEffect(() => {
-        Promise.all([
-            fetch('/header')
-                .then(res => res.json())
-                .then(data => {
-                    setHeader(data);
-                    setSelectedLanguage(data['active_lang'])
-                }),
-            fetch('/languages')
-                .then(res => res.json())
-                .then(data => setLanguages(data)),
-            fetch('/localization')
-                .then(res => res.json())
-                .then(data => setT(data)),
-        ]);
-    }, []);
+const headerQueryOptions = () => queryOptions({
+    queryKey: ["header"],
+    queryFn: fetchHeader,
+})
+
+const languagesQueryOptions = () => queryOptions({
+    queryKey: ["languages"],
+    queryFn: fetchLanguages,
+})
+
+const translationQueryOptions = () => queryOptions({
+    queryKey: ["translation"],
+    queryFn: fetchTranslation
+})
+
+const fetchHeader: () => Promise<{ [key: string]: string }> = async () => await fetch('/header').then(res => res.json())
+const fetchLanguages: () => Promise<string[][]> = async () => await fetch('/languages').then(res => res.json())
+const fetchTranslation: () => Promise<{ [key: string]: string }> = async () => await fetch('/localization').then(res => res.json())
+
+function Wizard() {
+    const {header, languages, T} = Route.useLoaderData();
+    const [selectedLanguage, setSelectedLanguage] = useState(header['active_lang']);
 
     const noLanguages = (
         <>
