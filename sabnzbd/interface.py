@@ -527,18 +527,6 @@ class MainPage:
         response = list_languages()
 
         return utob(json.dumps(response))
-
-    @secured_expose
-    def translation(self):
-        """Gets the po file for the current language"""
-        cherrypy.response.headers["Content-Type"] = "application/text;charset=UTF-8"
-        cherrypy.response.headers["Cache-Control"] = "no-cache"
-        filename = os.path.join("po", "main", cfg.language() + ".po")
-    
-        with open(filename) as f:
-            data = f.read()
-        
-        return utob(data)
             
 ##############################################################################
 class Wizard:
