@@ -3,26 +3,48 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as WizardImport } from './routes/wizard'
 import { Route as WizardIndexImport } from './routes/wizard/index'
+import { Route as WizardOneImport } from './routes/wizard/one'
 
 // Create/Update Routes
 
-const WizardIndexRoute = WizardIndexImport.update({
-  path: '/wizard/',
+const WizardRoute = WizardImport.update({
+  path: '/wizard',
   getParentRoute: () => rootRoute,
+} as any)
+
+const WizardIndexRoute = WizardIndexImport.update({
+  path: '/',
+  getParentRoute: () => WizardRoute,
+} as any)
+
+const WizardOneRoute = WizardOneImport.update({
+  path: '/one',
+  getParentRoute: () => WizardRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/wizard': {
+      preLoaderRoute: typeof WizardImport
+      parentRoute: typeof rootRoute
+    }
+    '/wizard/one': {
+      preLoaderRoute: typeof WizardOneImport
+      parentRoute: typeof WizardImport
+    }
     '/wizard/': {
       preLoaderRoute: typeof WizardIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof WizardImport
     }
   }
 }
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([WizardIndexRoute])
+export const routeTree = rootRoute.addChildren([
+  WizardRoute.addChildren([WizardOneRoute, WizardIndexRoute]),
+])

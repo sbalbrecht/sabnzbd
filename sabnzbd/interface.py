@@ -505,7 +505,7 @@ class MainPage:
 
     @secured_expose
     def header(self, **kwargs):
-        """Get common page header information"""
+        """Gets common page header information"""
         cherrypy.response.headers["Content-Type"] = "application/json;charset=UTF-8"
         cherrypy.response.headers["Cache-Control"] = "no-cache"
 
@@ -515,7 +515,7 @@ class MainPage:
 
     @secured_expose
     def languages(self, **kwargs):
-        """Get list of supported languages"""
+        """Gets list of supported languages"""
         cherrypy.response.headers["Content-Type"] = "application/json;charset=UTF-8"
 
         if sabnzbd.WIN32:
@@ -527,7 +527,20 @@ class MainPage:
         response = list_languages()
 
         return utob(json.dumps(response))
-            
+    
+    @secured_expose
+    def server(self, **kwargs):
+        """Gets first enabled server details, if they exist"""
+        cherrypy.response.headers["Content-Type"] = "application/json;charset=UTF-8"
+        response = get_first_enabled_server()
+        return utob(json.dumps(response))
+    
+    @secured_expose
+    def language(self, **kwargs):
+        """Sets user language"""
+        if kwargs.get("lang"):
+            cfg.language.set(kwargs.get("lang"))
+
 ##############################################################################
 class Wizard:
     def __init__(self, root):
@@ -545,7 +558,6 @@ class Wizard:
         info = build_header(sabnzbd.WIZARD_DIR)
         info["languages"] = list_languages()
 
-        # return open('ui/dist/index.html')
         return template_filtered_response(file=os.path.join(sabnzbd.WIZARD_DIR, "index.html"), search_list=info)
 
     @secured_expose(check_configlock=True)
@@ -554,39 +566,10 @@ class Wizard:
         if kwargs.get("lang"):
             cfg.language.set(kwargs.get("lang"))
 
-        info = build_header(sabnzbd.WIZARD_DIR)
+        header = build_header(sabnzbd.WIZARD_DIR)
+        server = get_first_enabled_server()
+        info = {**header, **server}
 
-        # Just in case, add server
-        servers = config.get_servers()
-        if not servers:
-            info["server"] = ""
-            info["host"] = ""
-            info["port"] = ""
-            info["username"] = ""
-            info["password"] = ""
-            info["connections"] = ""
-            info["ssl"] = 1
-            info["ssl_verify"] = 2
-        else:
-            # Sort servers to get the first enabled one
-            server_names = sorted(
-                servers,
-                key=lambda svr: "%d%02d%s"
-                % (int(not servers[svr].enable()), servers[svr].priority(), servers[svr].displayname().lower()),
-            )
-            for server in server_names:
-                # If there are multiple servers, just use the first enabled one
-                s = servers[server]
-                info["server"] = server
-                info["host"] = s.host()
-                info["port"] = s.port()
-                info["username"] = s.username()
-                info["password"] = s.password.get_stars()
-                info["connections"] = s.connections()
-                info["ssl"] = s.ssl()
-                info["ssl_verify"] = s.ssl_verify()
-                if s.enable():
-                    break
         return template_filtered_response(file=os.path.join(sabnzbd.WIZARD_DIR, "one.html"), search_list=info)
 
     @secured_expose(check_configlock=True)
@@ -608,6 +591,40 @@ class Wizard:
 
         return template_filtered_response(file=os.path.join(sabnzbd.WIZARD_DIR, "two.html"), search_list=info)
 
+def get_first_enabled_server():
+    response = {}
+    servers = config.get_servers()
+    if not servers:
+        response["server"] = ""
+        response["host"] = ""
+        response["port"] = ""
+        response["username"] = ""
+        response["password"] = ""
+        response["connections"] = 8
+        response["ssl"] = 1
+        response["ssl_verify"] = 2
+    else:
+        # Sort servers to get the first enabled one
+        server_names = sorted(
+            servers,
+            key=lambda svr: "%d%02d%s"
+            % (int(not servers[svr].enable()), servers[svr].priority(), servers[svr].displayname().lower()),
+        )
+        for server in server_names:
+            # If there are multiple servers, just use the first enabled one
+            s = servers[server]
+            response["server"] = server
+            response["host"] = s.host()
+            response["port"] = s.port()
+            response["username"] = s.username()
+            response["password"] = s.password.get_stars()
+            response["connections"] = s.connections()
+            response["ssl"] = s.ssl()
+            response["ssl_verify"] = s.ssl_verify()
+            if s.enable():
+                break
+    
+    return response
 
 def get_access_info():
     """Build up a list of url's that sabnzbd can be accessed from"""

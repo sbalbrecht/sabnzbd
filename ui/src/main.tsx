@@ -11,7 +11,7 @@ import { i18n, I18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 // @ts-expect-error LinguiJS Vite plugin compiles po file to a module during build
 import { messages } from "../../po/main/en.po";
-import { dynamicActivate } from "./i18n.js";
+import { activateLanguage } from "./i18n.js";
 import { fetchHeader } from "./api/common.js";
 import "./assets/css/bootstrap.min.css";
 import "./assets/js/jquery-3.5.1.min.js";
@@ -26,10 +26,6 @@ const router = new Router({
   context: {
     queryClient,
   },
-  defaultPreload: "intent",
-  // Since we're using React Query, we don't want loader calls to ever be stale
-  // This will ensure that the loader is always called when the route is preloaded or visited
-  defaultPreloadStaleTime: 0,
 });
 
 // Register the router instance for type safety
@@ -53,7 +49,7 @@ export function App({ i18n, router }: AppProps) {
   const { data } = useQuery({ queryKey: ["lang"], queryFn: fetchHeader });
   useEffect(() => {
     if (data && data["active_lang"]) {
-      dynamicActivate(data["active_lang"]);
+      activateLanguage(data["active_lang"]);
     }
   }, [data]);
 

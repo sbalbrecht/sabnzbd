@@ -1,164 +1,163 @@
 #root .container {
-    max-width: 1000px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    background-color: #fff;
-    text-align: left;
+  max-width: 1000px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+  text-align: left;
 }
 #inner {
-    background-color: #fff;
-    padding: 4px 32px 20px 32px;
+  background-color: #fff;
+  padding: 4px 32px 20px 32px;
 }
 #content {
-    min-height: 550px;
+  min-height: 550px;
 }
 #logo {
-    z-index: 40;
-    margin-bottom: -39px;
-    margin-top: 20px;
+  z-index: 40;
+  margin-bottom: -39px;
+  margin-top: 20px;
 }
 #logo img {
-    height: 55px;
-    width: 198px;
-    vertical-align: unset;
+  height: 55px;
+  width: 198px;
+  vertical-align: unset;
 }
 .language {
-    min-width: 150px;
-    width: 18%;
-    padding: 1em 0em;
-    margin: 5px 5px;
-    text-align: center;
-    float: left;
+  min-width: 150px;
+  width: 18%;
+  padding: 1em 0em;
+  margin: 5px 5px;
+  text-align: center;
+  float: left;
 }
 .language:hover {
-    background-color: #E4E4E4;
+  background-color: #e4e4e4;
 }
 .float {
-    float: left;
+  float: left;
 }
 .clear {
-    clear: left;
+  clear: left;
 }
 .spacer {
-    clear: both;
+  clear: both;
 }
 .inline {
-    display: inline;
+  display: inline;
 }
 .quoteBlock {
-    padding: 12px;
-    margin-top: 1px;
-    margin-bottom: 15px;
-    background-color: #f5f5f5;
+  padding: 12px;
+  margin-top: 1px;
+  margin-bottom: 15px;
+  background-color: #f5f5f5;
 }
 .quoteBlock a,
 a[target="_blank"] {
-
-    text-decoration: underline !important;
+  text-decoration: underline !important;
 }
 .success {
-    color: #00cc22;
+  color: #00cc22;
 }
 .failed {
-    color: red !important;
+  color: red !important;
 }
 #rightGreyText {
-    color: #ccc;
-    width: 100%;
-    text-align: right;
-    padding-top: 3px;
-    font-style: italic;
+  color: #ccc;
+  width: 100%;
+  text-align: right;
+  padding-top: 3px;
+  font-style: italic;
 }
 .indented {
-    padding-left: 10px;
+  padding-left: 10px;
 }
 label {
-    cursor: pointer;
+  cursor: pointer;
 }
 .input-checkbox {
-    padding-top: 7px !important;
+  padding-top: 7px !important;
 }
-.input-checkbox input+.help-block {
-    display: none;
+.input-checkbox input + .help-block {
+  display: none;
 }
-.input-checkbox input:checked+.help-block {
-    display: block;
-    float: right;
-    margin: 0;
+.input-checkbox input:checked + .help-block {
+  display: block;
+  float: right;
+  margin: 0;
 }
 .align-right {
-    text-align: right;
+  text-align: right;
 }
 .align-center {
-    text-align: center;
+  text-align: center;
 }
 .unselected,
 .selected {
-    display: inline-block;
+  display: inline-block;
 }
 .unselected {
-    padding: 6px 10px 6px 10px;
-    border: 1px solid #636363;
-    margin-left: 8px;
-    margin-right: 8px;
-    color: #636363;
+  padding: 6px 10px 6px 10px;
+  border: 1px solid #636363;
+  margin-left: 8px;
+  margin-right: 8px;
+  color: #636363;
 }
 .selected {
-    padding: 6px 10px 6px 10px;
-    color: white;
-    background-color: #636363;
-    border: 1px solid #636363;
-    margin-left: 8px;
-    margin-right: 8px;
+  padding: 6px 10px 6px 10px;
+  color: white;
+  background-color: #636363;
+  border: 1px solid #636363;
+  margin-left: 8px;
+  margin-right: 8px;
 }
 .bigger {
-    font-size: 14px;
+  font-size: 14px;
 }
 .bigger input {
-    font-size: 16px;
+  font-size: 16px;
 }
 .required-star {
-    color: red;
+  color: red;
 }
 .full-width {
-    width: 100%;
+  width: 100%;
 }
-.correct {
-    border: 2px solid #00cc22;
+.form-control.correct {
+  border: 2px solid #00cc22;
 }
-.incorrect {
-    border: 2px solid red;
+.form-control.incorrect {
+  border: 2px solid red;
 }
 .hidden {
-    display: none !important;
+  display: none !important;
 }
 .text-input {
-    width: 130px;
+  width: 130px;
 }
 .text-input-wide {
-    width: 230px;
+  width: 230px;
 }
 #server-hidden-settings input[type="number"] {
-    width: 100px;
+  width: 100px;
 }
 .input-group-bw {
-    width: 150px;
+  width: 150px;
 }
 .disabled-text {
-    text-decoration: line-through;
-    color: #ccc;
+  text-decoration: line-through;
+  color: #ccc;
 }
 #serverResponse {
-    padding: 6px 10px;
+  padding: 6px 10px;
 }
 #host-tip {
-    margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 .error-text {
-    display: inline;
-    color: red;
+  display: inline;
+  color: red;
 }
 #bandwidth {
-    display: inline-block;
+  display: inline-block;
 }
 
 /***
@@ -166,23 +165,23 @@ label {
 ***/
 
 #root * {
-    border-radius: 0 !important;
+  border-radius: 0 !important;
 }
 a,
 a:hover,
 a:active,
 a:visited,
 #serverResponse {
-    color: #555;
+  color: #555;
 }
 .btn {
-    box-shadow: 1px 1px 1px rgba(0, 0, 0, .1) !important;
-    min-width: 150px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1) !important;
+  min-width: 150px;
 }
 .btn .glyphicon,
 a .glyphicon {
-    top: 2px;
+  top: 2px;
 }
 small {
-    color: #777;
+  color: #777;
 }

@@ -11,12 +11,13 @@ const server = "http://localhost:8080";
 const paths = [
   "/header",
   "/languages",
-  "/translation",
-  "/wizard/one",
+  "/language",
+  "/server",
   "/wizard/two",
   "/wizard/static",
   "/staticcfg",
   "/config",
+  "/api",
 ];
 
 const proxy: Record<string, string | ProxyOptions> = {};
