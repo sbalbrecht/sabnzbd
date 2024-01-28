@@ -1,17 +1,18 @@
 import ReactDOM from "react-dom/client";
 import { StrictMode, useEffect } from "react";
 import { RouterProvider, Router } from "@tanstack/react-router";
+import { routeTree } from "./routeTree.gen.js";
 import {
   QueryClient,
   QueryClientProvider,
   useQuery,
 } from "@tanstack/react-query";
-import { routeTree } from "./routeTree.gen.js";
-import { dynamicActivate } from "./i18n.js";
 import { i18n, I18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 // @ts-expect-error LinguiJS Vite plugin compiles po file to a module during build
 import { messages } from "../../po/main/en.po";
+import { dynamicActivate } from "./i18n.js";
+import { fetchHeader } from "./api/common.js";
 import "./assets/css/bootstrap.min.css";
 import "./assets/js/jquery-3.5.1.min.js";
 import "./assets/js/bootstrap.min.js";
@@ -37,9 +38,6 @@ declare module "@tanstack/react-router" {
     router: typeof router;
   }
 }
-
-const fetchHeader: () => Promise<{ [key: string]: string }> = async () =>
-  await fetch("/header").then((res) => res.json());
 
 // Load and activate translation for default language
 i18n.load({ en: messages });

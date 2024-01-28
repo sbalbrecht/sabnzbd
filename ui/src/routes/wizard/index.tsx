@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FileRoute } from "@tanstack/react-router";
-import { queryOptions } from "@tanstack/react-query";
 import { Trans } from "@lingui/macro";
+import { headerQueryOptions, languagesQueryOptions } from "../../api/common";
 import logo from "/logo-full.svg";
 import "./wizard.css";
 
@@ -17,23 +17,6 @@ export const Route = new FileRoute("/wizard/").createRoute({
   },
   component: Wizard,
 });
-
-const headerQueryOptions = () =>
-  queryOptions({
-    queryKey: ["header"],
-    queryFn: fetchHeader,
-  });
-
-const languagesQueryOptions = () =>
-  queryOptions({
-    queryKey: ["languages"],
-    queryFn: fetchLanguages,
-  });
-
-const fetchHeader: () => Promise<{ [key: string]: string }> = async () =>
-  await fetch("/header").then((res) => res.json());
-const fetchLanguages: () => Promise<string[][]> = async () =>
-  await fetch("/languages").then((res) => res.json());
 
 function Wizard() {
   const { header, languages } = Route.useLoaderData();
